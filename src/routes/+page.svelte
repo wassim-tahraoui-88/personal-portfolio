@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Control from '../component/Control.svelte';
+    import Cursor from '../component/Cursor.svelte';
     import Button from '../component/Button.svelte';
     import { onMount } from 'svelte';
     let paneOverlay : Element, paneBase : Element;
@@ -37,10 +37,10 @@
 <div class="stack-pane">
     <div bind:this={paneBase} class="pane main">
         <div class="container">
-            <Button/>
+<!--            <Button text="Hello World"/>-->
         </div>
     </div>
     <div bind:this={paneOverlay} style="pointer-events: none;" class="pane overlay">
-        <Control/>
+        <Cursor/>
     </div>
 </div>

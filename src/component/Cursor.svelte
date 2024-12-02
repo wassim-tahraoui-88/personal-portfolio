@@ -51,7 +51,7 @@
 	    followerY += dy * easing;
 
 	    rotation += rotationSpeed * .01;
-	    circle.setAttribute('transform', `translate(${ followerX }, ${ followerY }) scale(0.5) rotate(${rotation % 360})`);
+	    circle.setAttribute('transform', `translate(${ followerX }, ${ followerY }) scale(2) rotate(${rotation % 360})`);
 	    pointer.setAttribute('transform', `translate(${ mouseX }, ${ mouseY })`);
 	    requestAnimationFrame(update);
     }
