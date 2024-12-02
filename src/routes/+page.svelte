@@ -25,11 +25,20 @@
         width: 100%;
         height: 100%;
     }
+    .container {
+	    position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+    }
 </style>
 <div class="stack-pane">
     <div bind:this={paneBase} class="pane main">
-        <h1 class="filter-glow">Welcome</h1>
-        <Button text="Load Data"/>
+        <div class="container">
+            <Button/>
+        </div>
     </div>
     <div bind:this={paneOverlay} style="pointer-events: none;" class="pane overlay">
         <Control/>
