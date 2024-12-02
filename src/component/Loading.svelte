@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+	import { onMount } from 'svelte';
+	import EffectType from '../utils/EffectType';
 
 	export let blinkRate = 100;
 	export let blinkColor = 'hsl(207,100%,85%)';
@@ -13,31 +14,34 @@
 
     const random = (min : number, max : number)  => Math.random() * (max - min) + min;
 
-	const effectSetup = (effect : string, element : Element) => {
-		switch (effect) {
-			case 'blink': return effectSetupBlink(element);
-			case 'spasm': return effectSetupSpasm(element);
-		}
+	const effects: { [key in EffectType] : any } = {
+		[EffectType.BLINK]: {
+			setup: (element : Element) => {
+				effects[EffectType.BLINK].apply(element);
+				setTimeout(() => effects[EffectType.BLINK].setup(element), random(100, 2000));
+			},
+			apply: (element : Element) => {
+				element.setAttribute('stroke', blinkColor);
+				element.classList.remove('glow');
+				setTimeout(() => {
+					element.setAttribute('stroke', 'white');
+					element.classList.add('glow');
+				}, blinkRate);
+			},
+        },
+		[EffectType.SPASM]: {
+	        setup: (element : Element) => {
+		        effects[EffectType.SPASM].apply(element);
+		        setTimeout(() => effects[EffectType.SPASM].setup(element), random(750, 4000));
+	        },
+	        apply: (element : Element) => element.setAttribute('transform', `rotate(${random(-270, 270)})`)
+        }
 	}
 
-    const effectSetupBlink = (element : Element) => {
-	    effectApplyBlink(element);
-	    setTimeout(() => effectSetupBlink(element), random(100, 2000));
-    };
-    const effectApplyBlink = (element : Element) => {
-	    element.setAttribute('stroke', blinkColor);
-	    element.classList.remove('glow');
-	    setTimeout(() => {
-		    element.setAttribute('stroke', 'white');
-		    element.classList.add('glow');
-	    }, blinkRate);
-    };
+	const effectSetup = (effect : EffectType, element : Element) => {
+		effects[effect].setup(element);
+	}
 
-    const effectSetupSpasm = (element : Element) => {
-	    effectApplySpasm(element);
-	    setTimeout(() => effectSetupSpasm(element), random(500, 2500)); // Schedule the next blink
-    };
-	const effectApplySpasm = (element : Element) => element.setAttribute('transform', `rotate(${random(-360, 360)})`);
 
     function update() {
 	    const startX = cursor.clientWidth / 2;
@@ -62,8 +66,8 @@
             mouseY = event.clientY;
         });
 	    circle.querySelectorAll('g').forEach((element) => {
-		    effectSetup('blink', element.firstElementChild!);
-			effectSetup('spasm', element as Element);
+		    effects[EffectType.BLINK].setup(element.firstElementChild!)
+		    effects[EffectType.SPASM].setup(element);
 	    });
 		update();
     });
@@ -108,7 +112,7 @@
 	        .pointer {
 		        animation: group-rotate 2s linear infinite;
                 g {
-                    transition: transform 0.5s cubic-bezier(1, -0.4, 0.2, 1.25);
+                    transition: transform 0.5s cubic-bezier(.6, -0.4, 0.2, 1.5);
 	                circle {
 		                transform-origin: 0 0;
 		                transition:
@@ -147,22 +151,14 @@
               stroke="white" stroke-width="2" stroke-dasharray="20 10 2" stroke-dashoffset="3"
               style="transition: stroke-dasharray 1s ease 0s, stroke-dashoffset 2s ease 0s;"/>
         <g bind:this={pointer} class="glow" transform="translate(50%, 50%)">
-            <circle r="10" stroke="white" stroke-width="2" fill="none"/>
-            <circle  r="2.5" fill="white"/>
+            <circle r="10" stroke="white" stroke-width="1" fill="none"/>
+            <circle r="2" fill="white"/>
         </g>
+
         <g bind:this={circle} class="pointer" transform="translate(50%, 50%) scale(0.1)" fill="none" stroke="white" stroke-width="10">
-            <g>
-                <circle cx="0%" cy="0%" r="100"
-                        stroke-dasharray="25 100 16"  style="transition-delay: .1s;"/>
-            </g>
-            <g>
-                <circle cx="0%" cy="0%" r="80"
-                        stroke-dasharray="120 25 16" style="transition-delay: .0s;"/>
-            </g>
-            <g>
-                <circle cx="0%" cy="0%" r="60"
-                        stroke-dasharray="120 25 16" style="transition-delay: .05s; transition: r 0.2s linear;"/>
-            </g>
+            <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
+            <g><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
+            <g><circle cx="0%" cy="0%" r="60" stroke-dasharray="120 25 16" style="transition-delay: .05s; transition: r 0.2s linear;"/></g>
         </g>
     </svg>
 </div>
