@@ -11,29 +11,31 @@
 	let mouseX = 0, mouseY = 0;
 	let rotation = 0;
 
-    let circle : Element, cursor : Element;
+    let circle : Element, svg : Element;
 
     function update() {
-
 	    const dx = mouseX - followerX;
 	    const dy = mouseY - followerY;
 
 	    followerX += dx * easing;
 	    followerY += dy * easing;
 
+	    const centerX = svg.clientWidth / 2;
+	    const centerY = svg.clientHeight / 2;
+
 	    rotation += rotationSpeed * .01;
-	    circle.setAttribute('transform', `rotate(${rotation % 360}) scale(2)`);
+	    circle.setAttribute('transform', `translate(${ centerX } ${ centerY }) rotate(${ rotation % 360 }) scale(1)`);
 	    requestAnimationFrame(update);
     }
 
     onMount(() => {
-	    setTimeout(() => cursor?.classList.remove('click'), 1000);
+	    setTimeout(() => svg?.classList.remove('click'), 1000);
         document.addEventListener('mousemove', (event) => {
 	        mouseX = event.clientX;
             mouseY = event.clientY;
         });
-	    document.addEventListener('mousedown', () => cursor?.classList.add('click'));
-	    document.addEventListener('mouseup', () => cursor?.classList.remove('click'));
+	    // document.addEventListener('mousedown', () => svg?.classList.add('click'));
+	    // document.addEventListener('mouseup', () => svg?.classList.remove('click'));
 	    circle.querySelectorAll('g').forEach((element) => {
 		    Effects[EffectType.BLINK].setup(element.firstElementChild!, { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } });
 		    Effects[EffectType.SPASM].setup(element, { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: 'scale(2)' } });
@@ -62,16 +64,16 @@
     }
     #_root {
         width: 100%;
-        .cursor {
+	    svg {
 	        .pointer {
-                transform: translate(50%, 50%);
+                transform-origin: 0 0;
 		        g {
                     transition: transform 0.5s cubic-bezier(.6, -0.4, 0.2, 1.5);
 	                circle {
 		                transform-origin: 0 0;
 		                transition:
 				                r  0.5s cubic-bezier(1, -0.4, 0.2, 2.5),
-				                transform  0.5s cubic-bezier(1, -0.4, 0.2, 2.5),
+				                transform 0.5s cubic-bezier(1, -0.4, 0.2, 2.5),
 				                stroke-dasharray 0.5s cubic-bezier(1, -0.4, 0.2, 2.5);
 	                }
                 }
@@ -94,7 +96,7 @@
     }
 </style>
 <div id="_root" class="container">
-    <svg width="100%" height="100%" class="cursor click" bind:this={cursor}>
+    <svg width="100%" height="100%" class="cursor click" bind:this={svg}>
         <g bind:this={circle} class="pointer" fill="none" stroke="white" stroke-width="10">
             <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
             <g><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
