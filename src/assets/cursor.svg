@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 32 32"
+     width="64" height="64">
+    <defs>
+        <filter id="glow" width="128" height="128" x="-64" y="-64">
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#fff"/>
+            <feDropShadow dx="0" dy="0" stdDeviation="1" flood-color="#0ff"/>
+            <feDropShadow dx="0" dy="0" stdDeviation="0.5" flood-color="#0ff"/>
+        </filter>
+    </defs>
+    <g filter="url(#glow)" transform="translate(16,16)">
+        <circle cx="0" cy="0" r="5" stroke="white" stroke-width="1" fill="none"/>
+        <circle cx="0" cy="0" r="1" fill="white"/>
+    </g>
+</svg>

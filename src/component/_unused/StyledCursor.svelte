@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Effects, { EffectType } from '../utils/Effects';
+	import Effects, { EffectType } from '../../utils/Effects';
 
 	export let easing = .5;
 	export let rotationSpeed = 20;
@@ -18,6 +18,7 @@
 	    const startY = cursor.clientHeight / 2;
 	    path.setAttribute('d', `M${startX} ${startY} L${mouseX} ${mouseY}`);
 
+	    console.log("TEST")
 	    const dx = mouseX - followerX;
 	    const dy = mouseY - followerY;
 
