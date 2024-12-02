@@ -1,43 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import EffectType from '../utils/EffectType';
+	import Effects, { EffectType } from '../utils/Effects';
 
-	export let blinkRate = 100;
-	export let blinkColor = 'hsl(207,100%,85%)';
 	export let easing = .5;
 	export let rotationSpeed = 20;
 
+	export let blinkColor = 'hsl(207,100%,85%)';
+	const blinkRate = 100;
 	let followerX = 0, followerY = 0;
 	let mouseX = 0, mouseY = 0;
 	let rotation = 0;
 
     let circle : Element, pointer : Element, path : Element, cursor : Element;
-
-    const random = (min : number, max : number)  => Math.random() * (max - min) + min;
-
-	const effects: { [key in EffectType] : any } = {
-		[EffectType.BLINK]: {
-			setup: (element : Element) => {
-				effects[EffectType.BLINK].apply(element);
-				setTimeout(() => effects[EffectType.BLINK].setup(element), random(100, 2000));
-			},
-			apply: (element : Element) => {
-				element.setAttribute('stroke', blinkColor);
-				element.classList.remove('filter-glow');
-				setTimeout(() => {
-					element.setAttribute('stroke', 'white');
-					element.classList.add('filter-glow');
-				}, blinkRate);
-			},
-        },
-		[EffectType.SPASM]: {
-	        setup: (element : Element) => {
-		        effects[EffectType.SPASM].apply(element);
-		        setTimeout(() => effects[EffectType.SPASM].setup(element), random(750, 4000));
-	        },
-	        apply: (element : Element) => element.setAttribute('transform', `rotate(${random(-270, 270)})`)
-        }
-	}
 
     function update() {
 	    const startX = cursor.clientWidth / 2;
@@ -65,8 +39,8 @@
 	    document.addEventListener('mousedown', () => cursor?.classList.add('click'));
 	    document.addEventListener('mouseup', () => cursor?.classList.remove('click'));
 	    circle.querySelectorAll('g').forEach((element) => {
-		    effects[EffectType.BLINK].setup(element.firstElementChild!)
-		    effects[EffectType.SPASM].setup(element);
+		    Effects[EffectType.BLINK].setup(element.firstElementChild!, { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } });
+		    Effects[EffectType.SPASM].setup(element, { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: '' } });
 	    });
 		update();
     });
