@@ -100,6 +100,7 @@
 	    }
     }
     #_ {
+        pointer-events: bounding-box;
         cursor: none;
 	    width: 100%;
 	    height: 100%;
