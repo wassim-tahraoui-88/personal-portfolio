@@ -1,5 +1,10 @@
-<script>
+<script lang="ts">
     import Control from '../component/Control.svelte';
+    import Button from '../component/Button.svelte';
+    import { onMount } from 'svelte';
+    let paneOverlay : Element, paneBase : Element;
+
+    onMount(() => {});
 </script>
 <style lang="scss">
     .stack-pane {
@@ -14,19 +19,19 @@
     .pane {
         position: absolute;
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        flex-direction: column;
         width: 100%;
         height: 100%;
     }
 </style>
 <div class="stack-pane">
-    <div class="pane pane-base">
-        <h1>Hello</h1>
-        <h2>Welcome</h2>
-        <p>To my personal portfolio website</p>
+    <div bind:this={paneBase} class="pane main">
+        <h1 class="filter-glow">Welcome</h1>
+        <Button text="Load Data"/>
     </div>
-    <div class="pane pane-top">
+    <div bind:this={paneOverlay} style="pointer-events: none;" class="pane overlay">
         <Control/>
     </div>
 </div>

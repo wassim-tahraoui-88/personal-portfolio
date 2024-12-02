@@ -5,6 +5,7 @@
 	export let blinkRate = 100;
 	export let blinkColor = 'hsl(207,100%,85%)';
 	export let easing = .5;
+	export let rotationSpeed = 20;
 
 	let followerX = 0, followerY = 0;
 	let mouseX = 0, mouseY = 0;
@@ -22,10 +23,10 @@
 			},
 			apply: (element : Element) => {
 				element.setAttribute('stroke', blinkColor);
-				element.classList.remove('glow');
+				element.classList.remove('filter-glow');
 				setTimeout(() => {
 					element.setAttribute('stroke', 'white');
-					element.classList.add('glow');
+					element.classList.add('filter-glow');
 				}, blinkRate);
 			},
         },
@@ -38,11 +39,6 @@
         }
 	}
 
-	const effectSetup = (effect : EffectType, element : Element) => {
-		effects[effect].setup(element);
-	}
-
-
     function update() {
 	    const startX = cursor.clientWidth / 2;
 	    const startY = cursor.clientHeight / 2;
@@ -54,17 +50,20 @@
 	    followerX += dx * easing;
 	    followerY += dy * easing;
 
-	    rotation += .25;
+	    rotation += rotationSpeed * .01;
 	    circle.setAttribute('transform', `translate(${ followerX }, ${ followerY }) scale(0.5) rotate(${rotation % 360})`);
-	    pointer.setAttribute('transform', `translate(${ mouseX }, ${ mouseY }) `);
+	    pointer.setAttribute('transform', `translate(${ mouseX }, ${ mouseY })`);
 	    requestAnimationFrame(update);
     }
 
     onMount(() => {
+	    cursor?.classList.remove('click');
         document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX
+	        mouseX = event.clientX;
             mouseY = event.clientY;
         });
+	    document.addEventListener('mousedown', () => cursor?.classList.add('click'));
+	    document.addEventListener('mouseup', () => cursor?.classList.remove('click'));
 	    circle.querySelectorAll('g').forEach((element) => {
 		    effects[EffectType.BLINK].setup(element.firstElementChild!)
 		    effects[EffectType.SPASM].setup(element);
@@ -91,17 +90,7 @@
 		    transform: rotateZ(360deg);
 	    }
     }
-    @keyframes group-rotate {
-	    0% {
-		    rotate: (0, 0, 0deg);
-	    }
-	    100% {
-		    rotate: (0, 0, 360deg);
-	    }
-    }
-    #_ {
-        pointer-events: bounding-box;
-        cursor: none;
+    #_root {
 	    width: 100%;
 	    height: 100%;
         display: flex;
@@ -111,7 +100,6 @@
 	        width: 100%;
 	        height: 100%;
 	        .pointer {
-		        animation: group-rotate 2s linear infinite;
                 g {
                     transition: transform 0.5s cubic-bezier(.6, -0.4, 0.2, 1.5);
 	                circle {
@@ -123,7 +111,7 @@
 	                }
                 }
 		    }
-	        &:active {
+	        &.click {
                 .pointer {
 	                circle {
 		                r: 5;
@@ -138,16 +126,13 @@
                 }
 	        }
         }
-        .glow {
-	        filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff);
-        }
         .swimmer {
             animation: swim 0.5s linear infinite;
         }
     }
 </style>
-<div id="_">
-    <svg width="100%" height="100%" class="cursor" bind:this={cursor}>
+<div id="_root">
+    <svg width="100%" height="100%" class="cursor click" bind:this={cursor}>
         <path bind:this={path} class="glow swimmer" d="" fill="none" opacity="0"
               stroke="white" stroke-width="2" stroke-dasharray="20 10 2" stroke-dashoffset="3"
               style="transition: stroke-dasharray 1s ease 0s, stroke-dashoffset 2s ease 0s;"/>
@@ -155,7 +140,6 @@
             <circle r="10" stroke="white" stroke-width="1" fill="none"/>
             <circle r="2" fill="white"/>
         </g>
-
         <g bind:this={circle} class="pointer" transform="translate(50%, 50%) scale(0.1)" fill="none" stroke="white" stroke-width="10">
             <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
             <g><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
