@@ -21,17 +21,16 @@
             .text {
 	            color: #00d9ff;
 	            font-size: 1.5rem;
-	            span {
-		            color: red;
+	            .caret {
+		            color: white;
 		            font-weight: bold;
-		            opacity: 1;
-		            animation: blink 0.5s steps(2) infinite alternate;
+		            animation: blink .5s steps(1) infinite;
 		            @keyframes blink {
-			            from {
-				            color: transparent;
+			            0% {
+				            opacity: 0;
 			            }
-			            to {
-				            color: white;
+			            50% {
+                            opacity: 1;
 			            }
 		            }
 	            }
@@ -41,7 +40,6 @@
 </style>
 <div id="_root" class="container">
     <div class="typewriter container">
-        <!--// TODO: span color fix-->
-        <p class="text">{output}<span style="color: white;" class="cursor">_</span></p>
+        <p class="text">{output}<span class="caret">&nbsp;_</span></p>
     </div>
 </div>

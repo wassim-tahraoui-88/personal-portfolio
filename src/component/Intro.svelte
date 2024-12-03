@@ -65,8 +65,9 @@
     #_root {
         width: 100%;
 	    svg {
-	        .pointer {
-                transform-origin: 0 0;
+		    overflow: visible;
+		    .pointer {
+			    transform-origin: 0 0;
 		        g {
                     transition: transform 0.5s cubic-bezier(.6, -0.4, 0.2, 1.5);
 	                circle {
@@ -96,11 +97,12 @@
     }
 </style>
 <div id="_root" class="container flex h">
-    <svg width="100%" height="100%" class="cursor click" bind:this={svg}>
+    <svg width="100%" height="100%" class="click" bind:this={svg}>
         <g bind:this={circle} class="pointer" fill="none" stroke="white" stroke-width="10">
             <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
             <g><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
             <g><circle cx="0%" cy="0%" r="60" stroke-dasharray="120 25 16" style="transition-delay: .05s; transition: r 0.2s linear;"/></g>
+            <circle r="1" fill="white" class="filter-glow"/>
         </g>
     </svg>
 </div>

@@ -39,6 +39,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+        overflow: visible;
 	}
     :global(.flex) {
 	    flex: 1 0 0;
@@ -80,6 +81,7 @@
 		}
 	}
 	:global(.filter-glow) {
+        overflow: visible;
 		color: #fff;
 		filter: drop-shadow(0 0 10px #0ff) drop-shadow(0 0 20px #0ff);
 	}
