@@ -8,10 +8,10 @@
 </script>
 <style lang="scss">
 </style>
-<div id="_root" class="container flex h row">
-    <div class="container flex h column">
+<div id="_root" class="container flex row h-100">
+    <div class="container flex h-100 column">
         <TypeWriter text="Hello and Welcome"/>
         <Button text="Join My World"/>
     </div>
-    <div class="container flex h column"><Intro/></div>
+    <div class="container flex h-100 column"><Intro/></div>
 </div>

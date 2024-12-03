@@ -12,19 +12,16 @@
 
 	let cursor : Element;
 
+	let trailMaxId = 0;
 	let mouseX = 0, mouseY = 0;
 	let trails = writable<Position[]>([]);
 
 	const updateTrails = (event : MouseEvent) => {
-		const { clientX :x, clientY: y } = event;
-		trails.update((positions : Position[]) : Position[] => {
-			const id = Date.now();
-			return [...positions, { id, x, y }].slice(-maxTrails);
-		});
+		const { clientX : x, clientY : y } = event;
+		trails.update((old : Position[]) : Position[] => [ ...old, { id: trailMaxId++, x, y } ].slice(-maxTrails));
 	};
 
 	const blinkOptions = { type: EffectType.BLINK, options: { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } } };
-
 
     const cursorUpdate = { on: () => cursor.classList.add('click'), off: () => cursor.classList.remove('click') };
 
@@ -112,7 +109,6 @@
 		}
 	}
 </style>
-
 <div id="_root" class="container">
     {#each $trails as { id, x, y } (id)}
         <div class="trail filter-glow" style="left: calc({x}px - 0.25rem); top: calc({y}px - 0.25rem);"></div>

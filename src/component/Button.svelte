@@ -82,8 +82,8 @@
 
 </style>
 <div bind:this={root} id="_root" class="container">
-    <div class="border container w">
+    <div class="border container">
         <p class="filter-glow-after">{text}</p>
-        <div class="w h background"></div>
+        <div class="w-100 h-100 background"></div>
     </div>
 </div>
