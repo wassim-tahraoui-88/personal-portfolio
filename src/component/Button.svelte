@@ -12,13 +12,7 @@
 </script>
 <style lang="scss">
     #_root {
-	    position: relative;
-	    display: flex;
-        align-items: center;
-        justify-content: center;
         text-align: center;
-	    width: 100%;
-	    height: 100%;
         color: #00d9ff;
 	    transform: skew(-15deg);
         backdrop-filter: blur(10px);
@@ -26,22 +20,24 @@
 	    border-radius: .25rem;
 	    z-index: 0;
         .border {
-	        position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
 	        transition: border 0.5s cubic-bezier(.6, -0.4, 0.2, 1.25);
+	        .background {
+		        position: absolute;
+		        opacity: 0;
+		        border-radius: .25rem;
+		        background: linear-gradient(45deg, #ffffff20, #5fffe335);
+		        transition: all 0.2s ease-in-out;
+	        }
 	        p {
+                user-select: none;
                 position: relative;
-                padding: 1.5rem 2.5rem;
+                padding: 2rem 4rem;
 		        font-size: 2rem;
                 &::after {
                     content: '';
                     position: absolute;
-                    width: 100%;
-                    height: 100%;
+	                width: 100%;
+	                height: 100%;
                     top: 0;
                     left: 0;
 	                border: #00d9ff solid 1px;
@@ -59,35 +55,35 @@
                 z-index: 1;
             }
         }
-        &::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            border-radius: .25rem;
-	        background: linear-gradient(45deg, #ffffff20, #5fffe335);
-            transition: all 0.2s ease-in-out;
-        }
-
         &:hover {
-		    &::before {
-                opacity: 1;
-            }
 		    .border {
+			    .background {
+				    opacity: 1;
+			    }
 			    &::after {
-				    border-left: double .5rem;
-				    border-right: double .5rem;
+				    border-left: double .65rem;
+				    border-right: double .65rem;
+			    }
+		    }
+	    }
+        &:active {
+		    .border {
+			    .background {
+				    opacity: 1;
+                    filter: brightness(.5);
+			    }
+			    &::after {
+				    border-left: double .4rem;
+				    border-right: double .4rem;
 			    }
 		    }
 	    }
     }
 
 </style>
-<div bind:this={root} id="_root">
-    <div class="border ">
+<div bind:this={root} id="_root" class="container">
+    <div class="border container w">
         <p class="filter-glow-after">{text}</p>
+        <div class="w h background"></div>
     </div>
 </div>

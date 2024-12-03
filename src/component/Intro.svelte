@@ -95,7 +95,7 @@
         }
     }
 </style>
-<div id="_root" class="container">
+<div id="_root" class="container flex h">
     <svg width="100%" height="100%" class="cursor click" bind:this={svg}>
         <g bind:this={circle} class="pointer" fill="none" stroke="white" stroke-width="10">
             <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>

@@ -39,9 +39,17 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		flex: 1 0 0;
+	}
+    :global(.flex) {
+	    flex: 1 0 0;
+    }
+	:global(.w) {
+		width: 100%;
+	}
+	:global(.h) {
 		height: 100%;
 	}
+
 	:global(.row) {
 		flex-direction: row;
 	}
@@ -86,14 +94,6 @@
 		background-color: #030514;
 	}
 </style>
-
-
-<div id="_root" class="container">
+<div id="_root" class="container flex h">
     <Welcome/>
-<!--    <div bind:this={paneBase} class="pane main">-->
-
-<!--    </div>-->
-<!--    <div bind:this={paneOverlay} style="pointer-events: none;" class="pane overlay">-->
-<!--        <Cursor/>-->
-<!--    </div>-->
 </div>
