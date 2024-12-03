@@ -1,7 +1,9 @@
 <script lang="ts">
+    // import { onMount } from 'svelte';
+
     import Welcome from '../pages/Welcome.svelte';
-    import { onMount } from 'svelte';
-    onMount(() => {});
+    import Cursor from '../component/ui/Cursor.svelte';
+
 </script>
 <style lang="scss">
 	@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
@@ -10,8 +12,9 @@
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0;
-		cursor: url('/cursor.svg') 32 32, auto;
+        cursor: none;
 	}
+
 	:global(body) {
 		width: 100vw;
 		height: 100vh;
@@ -95,7 +98,9 @@
 	#_root {
 		background-color: #030514;
 	}
+
 </style>
 <div id="_root" class="container flex h">
     <Welcome/>
+    <Cursor/>
 </div>

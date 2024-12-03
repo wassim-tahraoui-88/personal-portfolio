@@ -32,11 +32,13 @@
     }
 
     onMount(() => {
-	    setTimeout(() => svg?.classList.remove('click'), 1000);
+	    setTimeout(() => svg.classList.remove('click'), 1000);
         document.addEventListener('mousemove', (event) => {
 	        mouseX = event.clientX;
             mouseY = event.clientY;
         });
+        // document.addEventListener('mousedown', () => svg.classList.add('click'));
+        // document.addEventListener('mouseup', () => svg.classList.remove('click'));
 		update();
     });
 </script>
