@@ -28,4 +28,6 @@ const Effects: { [key in EffectType] : any } = {
 	}
 }
 
-export default Effects;
+export function useEffect(node : Element, params : { type: EffectType, options: any }) {
+	Effects[params.type].setup(node, params.options);
+}

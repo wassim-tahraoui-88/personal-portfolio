@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Effects, { EffectType } from '../utils/Effects';
+	import { EffectType, useEffect } from '../utils/Effects';
 
 	export let easing = .5;
 	export let rotationSpeed = 20;
@@ -10,6 +10,9 @@
 	let followerX = 0, followerY = 0;
 	let mouseX = 0, mouseY = 0;
 	let rotation = 0;
+
+	const blinkOptions = { type: EffectType.BLINK, options: { timeout: { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } }};
+	const spasmOptions = { type: EffectType.SPASM, options: { timeout: { min: 750, max: 4000 }, apply: { otherTransforms: 'scale(2)' } }};
 
     let circle : Element, svg : Element;
 
@@ -34,12 +37,6 @@
 	        mouseX = event.clientX;
             mouseY = event.clientY;
         });
-	    // document.addEventListener('mousedown', () => svg?.classList.add('click'));
-	    // document.addEventListener('mouseup', () => svg?.classList.remove('click'));
-	    circle.querySelectorAll('g').forEach((element) => {
-		    Effects[EffectType.BLINK].setup(element.firstElementChild!, { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } });
-		    Effects[EffectType.SPASM].setup(element, { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: 'scale(2)' } });
-	    });
 		update();
     });
 </script>
@@ -99,9 +96,9 @@
 <div id="_root" class="container flex h">
     <svg width="100%" height="100%" class="click" bind:this={svg}>
         <g bind:this={circle} class="pointer" fill="none" stroke="white" stroke-width="10">
-            <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
-            <g><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
-            <g><circle cx="0%" cy="0%" r="60" stroke-dasharray="120 25 16" style="transition-delay: .05s; transition: r 0.2s linear;"/></g>
+            <g use:useEffect={ blinkOptions } use:useEffect={ spasmOptions }><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
+            <g use:useEffect={ blinkOptions } use:useEffect={ spasmOptions }><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
+            <g use:useEffect={ blinkOptions } use:useEffect={ spasmOptions }><circle cx="0%" cy="0%" r="60" stroke-dasharray="120 25 16" style="transition-delay: .05s; transition: r 0.2s linear;"/></g>
             <circle r="1" fill="white" class="filter-glow"/>
         </g>
     </svg>
