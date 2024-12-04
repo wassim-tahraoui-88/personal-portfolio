@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
 
     export let onClick = (_ : Event) : void => {};
-    export let text : string = "";
+    export let text : string = '';
 
 	let root : Element;
 	onMount(() => {
@@ -29,20 +29,8 @@
 		        transition: all 0.2s ease-in-out;
 	        }
 	        p {
-                user-select: none;
-                position: relative;
                 padding: 2rem 4rem;
 		        font-size: 2rem;
-                &::after {
-                    content: '';
-                    position: absolute;
-	                width: 100%;
-	                height: 100%;
-                    top: 0;
-                    left: 0;
-	                border: #00d9ff solid 1px;
-	                border-radius: .25rem;
-                }
 	        }
             &::after {
                 content: '';
@@ -79,11 +67,10 @@
 		    }
 	    }
     }
-
 </style>
 <div bind:this={root} id="_root" class="container">
     <div class="border container">
-        <p class="filter-glow-after">{text}</p>
+        <p class="filter-glow-after bordered">{text}</p>
         <div class="w-100 h-100 background"></div>
     </div>
 </div>

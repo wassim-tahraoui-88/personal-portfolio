@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
+//region Global
 :root {
 	--primary-color: #00d9ff;
 	--glow-color: #0ff;
@@ -17,11 +18,13 @@ body {
 	height: 100vh;
 	backface-visibility: visible;
 }
+//endregion
 
 p {
 	color: var(--primary-color);
 }
 
+//region Containers
 .container {
 	position: relative;
 	display: flex;
@@ -47,25 +50,44 @@ p {
 		height: 100%;
 	}
 }
+//endregion
+
+//region Layout
 .flex {
 	flex: 1 0 0;
 }
-
 .w-100 {
 	width: 100%;
 }
 .h-100 {
 	height: 100%;
 }
-
 .row {
-	 flex-direction: row;
- }
+	flex-direction: row;
+}
 .column {
 	flex-direction: column;
 }
+//endregion
 
-/* Effects */
+//region Theme Styles
+.bordered {
+	position: relative;
+	&::after {
+		content: '';
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		border: var(--primary-color) solid 1px;
+		border-radius: .25rem;
+	}
+}
+
+//endregion
+
+//region Effects
 .text-glow {
 	position: relative;
 	color: white;
@@ -118,8 +140,9 @@ p {
 		}
 	}
 }
+//endregion
 
-/* Animations */
+//region Animations
 @keyframes fadeIn {
 	from {
 		opacity: 0;
@@ -191,7 +214,8 @@ p {
 		transform: rotate(360deg) scale(0);
 	}
 }
+//endregion
 
-
-/* Media Queries */
+//region Media Queries
 @media screen and (max-width: 768px) {}
+//endregion
