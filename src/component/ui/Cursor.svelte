@@ -71,9 +71,6 @@
 		.cursor {
             position: absolute;
             overflow: visible;
-            .pointer {
-                transform: translate(50%, 50%);
-            }
             circle {
                 transition: transform 0.25s cubic-bezier(0.5, -0.4, 0.2, 2.5);
             }
