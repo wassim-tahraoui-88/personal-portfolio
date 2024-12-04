@@ -15,6 +15,7 @@
 body {
 	width: 100vw;
 	height: 100vh;
+	backface-visibility: visible;
 }
 
 p {
@@ -117,3 +118,80 @@ p {
 		}
 	}
 }
+
+/* Animations */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes swipe-in {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+@keyframes swipe-out {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-100%);
+	}
+}
+
+@keyframes page-in {
+	from {
+		transform: rotate(0);
+		opacity: 1;
+	}
+	to {
+		transform: rotateY(180deg);
+		opacity: 0;
+	}
+}
+@keyframes page-out {
+	from {
+		transform: rotateY(180deg);
+		opacity: 0;
+	}
+	to {
+		transform: rotate(0);
+		opacity: 1;
+	}
+}
+
+@keyframes spiral-in {
+	from {
+		transform: rotate(360deg) scale(0);
+	}
+	to {
+		transform: rotate(0deg) scale(1);
+	}
+}
+@keyframes spiral-out {
+	from {
+		transform: rotate(0deg) scale(1);
+	}
+	to {
+		transform: rotate(360deg) scale(0);
+	}
+}
+
+
+/* Media Queries */
+@media screen and (max-width: 768px) {}
