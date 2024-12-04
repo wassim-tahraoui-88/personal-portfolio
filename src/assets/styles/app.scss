@@ -1,15 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
+:root {
+	--primary-color: #00d9ff;
+	--glow-color: #0ff;
+}
 * {
 	font-family: 'Orbitron', serif;
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
 	cursor: none;
+	user-select: none;
 }
 body {
 	width: 100vw;
 	height: 100vh;
+}
+
+p {
+	color: var(--primary-color);
 }
 
 .container {
@@ -58,8 +67,8 @@ body {
 /* Effects */
 .text-glow {
 	position: relative;
-	color: #fff;
-	text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+	color: white;
+	text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
 	&::after {
 		content: attr(data-text);
 		position: absolute;
@@ -74,25 +83,24 @@ body {
 		text-shadow: none;
 		color: rgba(255, 255, 255, 0.6);
 		font-weight: bolder;
-		filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #fff) blur(0.05em);
+		filter: drop-shadow(0 0 10px white) drop-shadow(0 0 20px white) blur(0.05em);
 		transform: perspective(50px) rotateX(45deg) scale(1.1, -.9);
 	}
 }
 .filter-glow {
 	overflow: visible;
-	color: #fff;
-	filter: drop-shadow(0 0 10px #0ff) drop-shadow(0 0 20px #0ff);
+	color: white;
+	filter: drop-shadow(0 0 10px var(--glow-color)) drop-shadow(0 0 20px var(--glow-color));
 }
 .filter-glow-after {
 	&::after {
-		color: #fff;
-		filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #fff);
+		color: white;
+		filter: drop-shadow(0 0 10px white) drop-shadow(0 0 20px white);
 	}
 }
 
 .typewriter-container {
 	.typewriter-text {
-		color: #00d9ff;
 		font-size: 1.5rem;
 		.typewriter-caret {
 			color: white;
