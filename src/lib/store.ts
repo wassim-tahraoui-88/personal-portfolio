@@ -1,7 +1,12 @@
-import { writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 
-export const MousePosition = writable({ x: 0, y: 0 });
+interface MousePosition {
+	x: number;
+	y: number;
+}
 
-export const MouseTrack = (event : MouseEvent) => {
-	MousePosition.set({ x: event.clientX, y: event.clientY });
+export const mousePosition : Writable<MousePosition> = writable({ x: 0, y: 0 });
+
+export const mouseTrack = (event : MouseEvent) : any => {
+	mousePosition.set({ x: event.clientX, y: event.clientY });
 }

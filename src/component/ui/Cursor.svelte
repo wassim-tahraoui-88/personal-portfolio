@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { EffectType, useEffect } from '$lib/actions/Effects';
+	import { mousePosition } from '$lib/store';
 
 	type Position = { id: number, x : number, y : number };
 
@@ -10,42 +11,32 @@
 	export let maxTrails = 128;
 	export let blinkRate = 100;
 
+    let trailMaxId = 0;
+	let trails = writable<Position[]>([]);
 	let cursor : Element;
 
-	let trailMaxId = 0;
-	let mouseX = 0, mouseY = 0;
-	let trails = writable<Position[]>([]);
+	const blinkOptions = { type: EffectType.BLINK, options: { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } } };
 
 	const updateTrails = (event : MouseEvent) => {
 		const { clientX : x, clientY : y } = event;
 		trails.update((old : Position[]) : Position[] => [ ...old, { id: trailMaxId++, x, y } ].slice(-maxTrails));
 	};
-
-	const blinkOptions = { type: EffectType.BLINK, options: { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } } };
-
     const cursorUpdate = { on: () => cursor.classList.add('click'), off: () => cursor.classList.remove('click') };
 
-	const dataUpdate = (event: MouseEvent) => {
-		mouseX = event.clientX;
-		mouseY = event.clientY;
-		updateTrails(event);
-	};
 	const animationUpdate = () => {
 		// path.setAttribute('d', `M${startX} ${startY} L${mouseX} ${mouseY}`);
-		// cursor.setAttribute('transform', `translate(${mouseX} ${mouseY})`);
-		cursor.setAttribute('style', `top: ${ mouseY - cursorSize/2 }px; left: ${ mouseX - cursorSize/2 }px;`);
+		cursor.setAttribute('style', `top: ${ $mousePosition.y - cursorSize/2 }px; left: ${ $mousePosition.x - cursorSize/2 }px;`);
 		requestAnimationFrame(animationUpdate);
 	};
 
 	onMount(() => {
 		cursor.classList.remove('click');
-		document.addEventListener('mousemove', dataUpdate);
+		document.addEventListener('mousemove', updateTrails);
 		document.addEventListener('mousedown', cursorUpdate.on);
 		document.addEventListener('mouseup', cursorUpdate.off);
 		animationUpdate();
-
 		return () => {
-			document.removeEventListener('mousemove', dataUpdate);
+			document.removeEventListener('mousemove', updateTrails);
 			document.removeEventListener('mousedown', cursorUpdate.on);
 			document.removeEventListener('mouseup', cursorUpdate.off);
 		}
@@ -83,7 +74,6 @@
 		.swimmer {
 			animation: swim 0.5s linear infinite;
 		}
-
 		.trail {
 			position: absolute;
 			width: .5rem;
