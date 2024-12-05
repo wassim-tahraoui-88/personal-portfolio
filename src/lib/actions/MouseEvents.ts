@@ -1,6 +1,6 @@
 import type { Action } from 'svelte/action';
 
-export type MouseEventOptions = { callback: MouseEventCallback, data?: any };
+export type MouseEventOptions = { callback : MouseEventCallback, data? : any };
 export type MouseEventCallback = (event : Event) => void;
 export type InteractiveNode = HTMLElement | SVGElement;
 
