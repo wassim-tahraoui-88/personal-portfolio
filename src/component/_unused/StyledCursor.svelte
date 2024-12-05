@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { EffectType, useEffect } from "$lib/actions/Effects";
 
 	export let easing = .5;
 	export let rotationSpeed = 20;
@@ -10,7 +11,10 @@
 	let mouseX = 0, mouseY = 0;
 	let rotation = 0;
 
-    let circle : Element, pointer : Element, path : Element, cursor : Element;
+	const blinkOptions = {type: EffectType.BLINK, options : { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } }};
+	const spasmOptions = {type: EffectType.SPASM, options : { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: '' } }};
+
+    let path : Element, cursor : Element;
 
     function update() {
 	    const startX = cursor.clientWidth / 2;
@@ -38,10 +42,6 @@
         });
 	    document.addEventListener('mousedown', () => cursor?.classList.add('click'));
 	    document.addEventListener('mouseup', () => cursor?.classList.remove('click'));
-	    // circle.querySelectorAll('g').forEach((element) => {
-		    // Effects[EffectType.BLINK].setup(element.firstElementChild!, { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } });
-		    // Effects[EffectType.SPASM].setup(element, { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: '' } });
-	    // });
 		update();
     });
 </script>
@@ -110,14 +110,20 @@
         <path bind:this={path} class="glow swimmer" d="" fill="none" opacity="0"
               stroke="white" stroke-width="2" stroke-dasharray="20 10 2" stroke-dashoffset="3"
               style="transition: stroke-dasharray 1s ease 0s, stroke-dashoffset 2s ease 0s;"/>
-        <g bind:this={pointer} class="glow" transform="translate(50%, 50%)">
+        <g class="glow" transform="translate(50%, 50%)">
             <circle r="10" stroke="white" stroke-width="1" fill="none"/>
             <circle r="2" fill="white"/>
         </g>
-        <g bind:this={circle} class="pointer" transform="translate(50%, 50%) scale(0.1)" fill="none" stroke="white" stroke-width="10">
-            <g><circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" style="transition-delay: .1s;"/></g>
-            <g><circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" style="transition-delay: .0s;"/></g>
-            <g><circle cx="0%" cy="0%" r="60" stroke-dasharray="120 25 16" style="transition-delay: .05s; transition: r 0.2s linear;"/></g>
+        <g class="pointer" transform="translate(50%, 50%) scale(0.1)" fill="none" stroke="white" stroke-width="10">
+            <g use:useEffect={spasmOptions}>
+                <circle cx="0%" cy="0%" r="100" stroke-dasharray="25 100 16" use:useEffect={blinkOptions} style="transition-delay: .1s;"/>
+            </g>
+            <g use:useEffect={spasmOptions}>
+                <circle cx="0%" cy="0%" r="80" stroke-dasharray="120 25 16" use:useEffect={blinkOptions} style="transition-delay: .0s;"/>
+            </g>
+            <g use:useEffect={spasmOptions}>
+                <circle cx="0%" cy="0%" r="60" stroke-dasharray="120 25 16" use:useEffect={blinkOptions} style="transition-delay: .05s; transition: r 0.2s linear;"/>
+            </g>
         </g>
     </svg>
 </div>
