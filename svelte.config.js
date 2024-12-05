@@ -4,7 +4,12 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	preprocess: vitePreprocess(),
-
+    resolve: {
+        alias: {
+            $assets: '/src/assets',
+            $styles: '/src/assets/styles',
+        }
+    },
 	kit: {
         files: {
             assets: 'src/assets',

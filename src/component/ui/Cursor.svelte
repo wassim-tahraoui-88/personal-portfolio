@@ -17,11 +17,30 @@
 
 	const blinkOptions = { type: EffectType.BLINK, options: { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } } };
 
+	let ripples : { id : number, x : number, y : number}[] = [];
+
 	const updateTrails = (event : MouseEvent) => {
 		const { clientX : x, clientY : y } = event;
 		trails.update((old : Position[]) : Position[] => [ ...old, { id: trailMaxId++, x, y } ].slice(-maxTrails));
 	};
-    const cursorUpdate = { on: () => cursor.classList.add('click'), off: () => cursor.classList.remove('click') };
+    const cursorUpdate = {
+		on: (_ : MouseEvent) => {
+			cursor.classList.add('click');
+
+			const ripple = {
+				id: Date.now(),
+				x: $mousePosition.x,
+				y: $mousePosition.y,
+			};
+
+			ripples = [...ripples, ripple];
+
+			setTimeout(() => ripples = ripples.filter(r => r.id !== ripple.id), 500);
+		},
+        off: (_ : MouseEvent) => {
+	        cursor.classList.remove('click');
+        }
+	};
 
 	const animationUpdate = () => {
 		// path.setAttribute('d', `M${startX} ${startY} L${mouseX} ${mouseY}`);
@@ -43,6 +62,8 @@
 	});
 </script>
 <style lang="scss">
+	@import './../../assets/styles/variables.scss';
+
 	@keyframes swim {
 		0% {
 			stroke-dasharray: 20 10 2;
@@ -95,6 +116,25 @@
 			}
 		}
 	}
+
+	.ripple {
+		position: absolute;
+		width: 2rem;
+		height: 2rem;
+		border: 1px solid $primary-color;
+		background: radial-gradient($primary-color, transparent);
+		border-radius: 100%;
+		scale: 1;
+		opacity: 0.9;
+		translate: -1rem -1rem;
+		animation: ripple-effect 0.5s ease-out forwards;
+	}
+	@keyframes ripple-effect {
+        to {
+	        scale: 5;
+			opacity: 0;
+		}
+	}
 </style>
 <div id="_root" class="container">
     {#each $trails as { id, x, y } (id)}
@@ -106,6 +146,9 @@
             <circle cx="0" cy="0" r="1" fill="white"/>
         </g>
     </svg>
+    {#each ripples as ripple (ripple.id)}
+        <div class="ripple" style="left: {ripple.x}px; top: {ripple.y}px;"></div>
+    {/each}
 <!--        <g bind:this={pointer} class="glow">
                 <circle r="10" stroke="white" stroke-width="1" fill="none"/>
                 <circle r="2" fill="white"/>

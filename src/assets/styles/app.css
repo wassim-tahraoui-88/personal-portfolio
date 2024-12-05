@@ -1,10 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap");
-:root {
-  --primary-color: #00d9ff;
-  --background-color: #030514;
-  --glow-color: #0ff;
-}
-
 * {
   font-family: "Orbitron", serif;
   box-sizing: border-box;
@@ -17,7 +11,7 @@
 body {
   width: 100vw;
   height: 100vh;
-  background-color: var(--background-color);
+  background-color: #030514;
   backface-visibility: visible;
 }
 
@@ -85,7 +79,7 @@ body {
 }
 
 p {
-  color: var(--primary-color);
+  color: #00d9ff;
 }
 
 .bordered {
@@ -98,14 +92,14 @@ p {
   height: 100%;
   top: 0;
   left: 0;
-  border: var(--primary-color) solid 1px;
+  border: #00d9ff solid 1px;
   border-radius: 0.25rem;
 }
 
 .text-glow {
   position: relative;
   color: white;
-  text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 .text-glow::after {
   content: attr(data-text);
@@ -128,7 +122,7 @@ p {
 .filter-glow {
   overflow: visible;
   color: white;
-  filter: drop-shadow(0 0 10px var(--glow-color)) drop-shadow(0 0 20px var(--glow-color));
+  filter: drop-shadow(0 0 10px #0ff) drop-shadow(0 0 20px #0ff);
 }
 
 .filter-glow-after::after {
