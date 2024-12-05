@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
 
     export let onClick = (_ : Event) : void => {};
-    export let text : string = '';
 
 	let root : Element;
 	onMount(() => {
@@ -70,7 +69,7 @@
 </style>
 <div bind:this={root} id="_root" class="container">
     <div class="border container">
-        <p class="filter-glow-after bordered">{text}</p>
+        <p class="filter-glow-after bordered"><slot/></p>
         <div class="w-100 h-100 background"></div>
     </div>
 </div>
