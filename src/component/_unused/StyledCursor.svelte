@@ -16,12 +16,12 @@
 
     let path : Element, cursor : Element;
 
-    function update() {
+    const update = () => {
 	    const startX = cursor.clientWidth / 2;
 	    const startY = cursor.clientHeight / 2;
+
 	    path.setAttribute('d', `M${startX} ${startY} L${mouseX} ${mouseY}`);
 
-	    console.log("TEST")
 	    const dx = mouseX - followerX;
 	    const dy = mouseY - followerY;
 
@@ -32,7 +32,7 @@
 	    // circle.setAttribute('transform', `translate(${ followerX }, ${ followerY }) scale(2) rotate(${rotation % 360})`);
 	    // pointer.setAttribute('transform', `translate(${ mouseX }, ${ mouseY })`);
 	    requestAnimationFrame(update);
-    }
+    };
 
     onMount(() => {
 	    setTimeout(() => cursor?.classList.remove('click'), 1000);
