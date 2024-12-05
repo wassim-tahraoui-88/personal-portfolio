@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { EffectType, useEffect } from '../../utils/Effects';
-	import { writable } from "svelte/store";
+	import { writable } from 'svelte/store';
+	import { EffectType, useEffect } from '$lib/actions/Effects';
 
 	type Position = { id: number, x : number, y : number };
 

@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { EffectType, useEffect } from '../utils/Effects';
+    import { scale } from 'svelte/transition';
+    import { EffectType, useEffect } from '$lib/actions/Effects';
 
     export let text : string = '';
     export let speed : number = 100;
@@ -9,4 +10,4 @@
 		options: { apply: { text, interval: speed }, timeout: {} }
 	}
 </script>
-<p id="_root" class="container" use:useEffect={options}></p>
+<p id="_root" class="container" use:useEffect={options} transition:scale></p>

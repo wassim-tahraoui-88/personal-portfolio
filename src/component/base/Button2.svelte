@@ -1,48 +1,31 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { EffectType, useEffect } from '../../utils/Effects';
-    import { generateUICircles } from '../../utils/Generators';
+    import { slide } from 'svelte/transition';
+    import { EffectType, useEffect } from '$lib/actions/Effects';
+    import { useLongPress } from '$lib/actions/MouseEvents';
+    import { generateUICircles } from '$lib/actions/Generators';
 
-    export let onClick = (_ : Event) : void => {};
-
-    export let easing = .5;
-    export let rotationSpeed = 20;
-
-    export let blinkColor = 'hsl(207,100%,85%)';
-    const blinkRate = 100;
-    let followerX = 0, followerY = 0;
-    let mouseX = 0, mouseY = 0;
+    let { rotationSpeed = 20, pressDuration = 500, blinkRate = 100, blinkColor = 'hsl(207,100%,85%)' } = $props();
     let rotation = 0;
 
-	const circles = generateUICircles({ maxRadius: 50, count: { min: 5, max: 10 }, strokeWidth: { min: 0.5, max: 3 }, offsetFactor: 5});
-
+	const circles = generateUICircles({ maxRadius: 64, count: { min: 5, max: 10 }, strokeWidth: { min: 0.5, max: 3 }, offsetFactor: 5});
     const blinkOptions = { type: EffectType.BLINK, options: { timeout: { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } }};
     const spasmOptions = { type: EffectType.SPASM, options: { timeout: { min: 750, max: 4000 }, apply: { otherTransforms: '' } }};
 
-    let circle : Element, svg : SVGSVGElement;
+    let root : Element, graphics : Element, svg : SVGSVGElement;
+
+    const onClick = () => {
+        console.log('Test');
+    }
 
     function update() {
-	    const dx = mouseX - followerX;
-	    const dy = mouseY - followerY;
-
-	    followerX += dx * easing;
-	    followerY += dy * easing;
-
-	    const centerX = svg.viewBox.baseVal.width / 2;
-	    const centerY = svg.viewBox.baseVal.height / 2;
-
-	    rotation += rotationSpeed * .01;
-	    circle.setAttribute('transform', `translate(${ centerX } ${ centerY }) rotate(${ rotation % 360 }) scale(1)`);
+	    const htmlGraphics = graphics as HTMLElement;
+	    htmlGraphics.style.translate = `50% 50%`;
+	    htmlGraphics.style.rotate = `${ (rotation += rotationSpeed * .01) % 360 }deg`;
 	    requestAnimationFrame(update);
     }
 
     onMount(() => {
-	    document.addEventListener('mousemove', (event) => {
-		    mouseX = event.clientX;
-		    mouseY = event.clientY;
-	    });
-	    // document.addEventListener('mousedown', () => svg.classList.add('click'));
-	    // document.addEventListener('mouseup', () => svg.classList.remove('click'));
 	    update();
     });
 </script>
@@ -66,15 +49,13 @@
 		}
 	}
 	#_root {
-        width: 25rem;
-        height: 25rem;
+        width: 20rem;
+        height: 20rem;
 		svg {
 			overflow: visible;
-
-			width: 100%;
-			height: 100%;
-			.pointer {
-				transform-origin: 0 0;
+			.graphics {
+                transform-origin: 0 0;
+				transition: scale 0.25s cubic-bezier(.5, -0.4, 0.2, 2);
 				g {
 					transition: transform 0.5s cubic-bezier(.6, -0.4, 0.2, 1.5);
 					circle {
@@ -86,32 +67,41 @@
 					}
 				}
 			}
-			&.click {
-				.pointer {
+
+            &:has(.touchable:hover) {
+                .graphics {
+                    scale: 1.1;
+                }
+            }
+			&:has(.touchable:active) {
+				.graphics {
+					scale: 0.9;
 					circle {
 						r: 5;
 						stroke-dasharray: 5;
 						stroke-dashoffset: 0;
 						animation: circle-rotate 0.5s linear infinite;
 						transition:
-								r 0.4s cubic-bezier(1, -0.4, 0.2, 1.25),
-								transform 0.4s cubic-bezier(1, -0.4, 0.2, 1.25),
-								stroke-dasharray 0.4s cubic-bezier(1, -0.4, 0.2, 1.25);
+								r 0.1s cubic-bezier(1, -0.4, 0.2, 1.25),
+								transform 0.1s cubic-bezier(1, -0.4, 0.2, 1.25),
+								stroke-dasharray 0.1s cubic-bezier(1, -0.4, 0.2, 1.25);
 					}
 				}
 			}
 		}
 	}
 </style>
-<div id="_root" class="container">
+<div bind:this={root} id="_root" class="container" transition:slide>
     <svg bind:this={svg} width="100%" height="100%" viewBox="0 0 256 256">
-        <g bind:this={circle} class="pointer" fill="none" stroke="white" >
+        <g bind:this={graphics} class="graphics" fill="none" stroke="white">
             {#each circles as { radius, strokeWidth, dashArray }, i}
                 <g use:useEffect={ spasmOptions }>
-                    <circle cx="0" cy="0" r={radius} stroke-width={strokeWidth} use:useEffect={ blinkOptions } stroke-dasharray="{dashArray}" style="transition-delay: {i * 0.05}s;"/>
+                    <circle cx="0" cy="0" r={radius} stroke-width={strokeWidth} use:useEffect={ blinkOptions } stroke-dasharray="{dashArray}" style="transition-delay: {i * 50}ms;"/>
                 </g>
             {/each}
             <circle r="1" fill="white" class="filter-glow"/>
+            <circle cx="0" cy="0" r="64" stroke="transparent" fill="transparent" class="touchable"
+                    use:useLongPress={{ callback: onClick, data: { duration: pressDuration } }}/>
         </g>
     </svg>
 </div>

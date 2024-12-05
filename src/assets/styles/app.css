@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap");
 :root {
   --primary-color: #00d9ff;
+  --background-color: #030514;
   --glow-color: #0ff;
 }
 
@@ -16,6 +17,7 @@
 body {
   width: 100vw;
   height: 100vh;
+  background-color: var(--background-color);
   backface-visibility: visible;
 }
 

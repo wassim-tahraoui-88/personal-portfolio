@@ -6,11 +6,6 @@
 
 </script>
 <style lang="scss">
-
-	#_root {
-		background-color: #030514;
-	}
-
 </style>
 <div id="_root" class="container flex h-100">
     <Welcome/>

@@ -3,6 +3,7 @@
 //region Global
 :root {
 	--primary-color: #00d9ff;
+	--background-color: #030514;
 	--glow-color: #0ff;
 }
 * {
@@ -16,6 +17,7 @@
 body {
 	width: 100vw;
 	height: 100vh;
+	background-color: var(--background-color);
 	backface-visibility: visible;
 }
 //endregion

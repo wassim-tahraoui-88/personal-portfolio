@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Effects, { EffectType } from '../../utils/Effects';
 
 	export let easing = .5;
 	export let rotationSpeed = 20;
@@ -39,10 +38,10 @@
         });
 	    document.addEventListener('mousedown', () => cursor?.classList.add('click'));
 	    document.addEventListener('mouseup', () => cursor?.classList.remove('click'));
-	    circle.querySelectorAll('g').forEach((element) => {
-		    Effects[EffectType.BLINK].setup(element.firstElementChild!, { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } });
-		    Effects[EffectType.SPASM].setup(element, { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: '' } });
-	    });
+	    // circle.querySelectorAll('g').forEach((element) => {
+		    // Effects[EffectType.BLINK].setup(element.firstElementChild!, { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } });
+		    // Effects[EffectType.SPASM].setup(element, { timeout : { min: 750, max: 4000 }, apply: { otherTransforms: '' } });
+	    // });
 		update();
     });
 </script>

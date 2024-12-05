@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { EffectType, useEffect } from '../utils/Effects';
+	import { EffectType, useEffect } from '$lib/actions/Effects';
 
 	export let easing = .5;
 	export let rotationSpeed = 20;
