@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import LabelButton from '$lib/components/atoms/LabelButton.svelte';
     import TypewriterLabel from '$lib/components/atoms/TypeWriter.svelte';
-    import GraphicButton from '$lib/components/atoms/GraphicButton.svelte';
+    import GraphicButton from '$lib/components/molecules/GraphicButton.svelte';
     let visible = $state(false);
 
     onMount(() => {});
