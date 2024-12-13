@@ -1,4 +1,4 @@
-import { random } from './Utils';
+import { random } from './utils';
 
 export interface UICircle {
 	radius: number;

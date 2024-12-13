@@ -1,4 +1,4 @@
-import { random } from './Utils';
+import { random } from './utils';
 
 export type EffectOptions = { timeout: any, apply: any }
 
@@ -9,15 +9,18 @@ export enum EffectType {
 const Effects: { [key in EffectType] : { setup: Function, apply : Function } } = {
 	[EffectType.BLINK]: {
 		setup: (element : Element, options : EffectOptions) => {
-			Effects[EffectType.BLINK].apply(element, options.apply.color, options.apply.duration );
+			if (options.apply.filterClass && !element.classList.contains(options.apply.filterClass))
+				element.classList.add(options.apply.filterClass);
+
+			Effects[EffectType.BLINK].apply(element, options.apply.blinkClass, options.apply.color, options.apply.duration);
 			setTimeout(() => Effects[EffectType.BLINK].setup(element, options), random(options.timeout.min, options.timeout.max));
 		},
-		apply: (element : Element, color: string, duration : number) => {
+		apply: (element : Element, blinkClass : string, color: string, duration : number) => {
 			element.setAttribute('stroke', color);
-			element.classList.remove('filter-glow');
+			element.classList.remove(blinkClass);
 			setTimeout(() => {
 				element.setAttribute('stroke', 'white');
-				element.classList.add('filter-glow');
+				element.classList.add(blinkClass);
 			}, duration);
 		},
 	},

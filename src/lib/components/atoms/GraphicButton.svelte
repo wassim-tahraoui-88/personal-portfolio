@@ -5,14 +5,15 @@
     import { useLongPress } from '$lib/actions/MouseEvents';
     import { generateUICircles } from '$lib/actions/Generators';
 
+
     let { rotationSpeed = 20, pressDuration = 500, blinkRate = 100, blinkColor = 'hsl(207,100%,85%)' } = $props();
     let rotation = 0;
 
 	const circles = generateUICircles({ maxRadius: 64, count: { min: 5, max: 10 }, strokeWidth: { min: 0.5, max: 3 }, offsetFactor: 5});
-    const blinkOptions = { type: EffectType.BLINK, options: { timeout: { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } }};
+    const blinkOptions = { type: EffectType.BLINK, options: { timeout: { min: 100, max: 2000 }, apply: { filterClass: 'filter-glow', blinkClass: 'glow-on', color: blinkColor, duration: blinkRate } }};
     const spasmOptions = { type: EffectType.SPASM, options: { timeout: { min: 750, max: 4000 }, apply: { otherTransforms: '' } }};
 
-    let root : Element, graphics : Element, svg : SVGSVGElement;
+    let pressable : Element, graphics : Element, svg : SVGSVGElement;
 
     const onClick = () => {
         console.log('Test');
@@ -24,7 +25,6 @@
 	    htmlGraphics.style.rotate = `${ (rotation += rotationSpeed * .01) % 360 }deg`;
 	    requestAnimationFrame(update);
     }
-
     onMount(() => {
 	    update();
     });
@@ -48,17 +48,22 @@
 			transform: rotateZ(360deg);
 		}
 	}
-	#_root {
+	#root {
+		user-select: text;
         width: 20rem;
         height: 20rem;
 		svg {
+			user-select: text;
 			overflow: visible;
 			.graphics {
+				user-select: text;
                 transform-origin: 0 0;
 				transition: scale 0.25s cubic-bezier(.5, -0.4, 0.2, 2);
 				g {
+					user-select: text;
 					transition: transform 0.5s cubic-bezier(.6, -0.4, 0.2, 1.5);
 					circle {
+						user-select: none;
 						transform-origin: 0 0;
 						transition:
 								r  0.5s cubic-bezier(1, -0.4, 0.2, 2.5),
@@ -68,6 +73,9 @@
 				}
 			}
 
+            .touchable {
+	            user-select: text;
+            }
             &:has(.touchable:hover) {
                 .graphics {
                     scale: 1.1;
@@ -91,16 +99,16 @@
 		}
 	}
 </style>
-<div bind:this={root} id="_root" class="container" transition:slide>
-    <svg bind:this={svg} width="100%" height="100%" viewBox="0 0 256 256">
-        <g bind:this={graphics} class="graphics" fill="none" stroke="white">
+<div id="root" class="container" transition:slide draggable="false">
+    <svg bind:this={svg} width="100%" height="100%" viewBox="0 0 256 256" >
+        <g bind:this={graphics} class="graphics" fill="none" stroke="white" >
             {#each circles as { radius, strokeWidth, dashArray }, i}
                 <g use:useEffect={ spasmOptions }>
                     <circle cx="0" cy="0" r={radius} stroke-width={strokeWidth} use:useEffect={ blinkOptions } stroke-dasharray="{dashArray}" style="transition-delay: {i * 50}ms;"/>
                 </g>
             {/each}
-            <circle r="1" fill="white" class="filter-glow"/>
-            <circle cx="0" cy="0" r="64" stroke="transparent" fill="transparent" class="touchable"
+            <circle r="1" fill="white" class="filter-glow glow-on"/>
+            <circle bind:this={pressable} cx="0" cy="0" r="64" stroke="transparent" fill="transparent" class="touchable"
                     use:useLongPress={{ callback: onClick, data: { duration: pressDuration } }}/>
         </g>
     </svg>

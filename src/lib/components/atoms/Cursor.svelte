@@ -1,36 +1,33 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
 	import { EffectType, useEffect } from '$lib/actions/Effects';
-	import { mousePosition } from '$lib/store';
+	import { MousePosition } from '$lib/stores/mouseStore';
+	import { blinkColor } from '$lib/stores/constants';
+	import type { Position } from '$lib/types';
 
-	type Position = { id: number, x : number, y : number };
-
-	export let blinkColor = 'hsl(207,100%,85%)';
-	export let cursorSize = 64;
-	export let maxTrails = 128;
-	export let blinkRate = 100;
+	let { cursorSize = 64, maxTrails = 128, blinkRate = 100 } = $props();
 
     let trailMaxId = 0;
-	let trails = writable<Position[]>([]);
+	let trails = $state<Position[]>([]);
+	let ripples = $state<Position[]>([]);
+
 	let cursor : Element;
 
-	const blinkOptions = { type: EffectType.BLINK, options: { timeout : { min: 100, max: 2000 }, apply: { color: blinkColor, duration: blinkRate } } };
-
-	let ripples : { id : number, x : number, y : number}[] = [];
+	const blinkOptions = { type: EffectType.BLINK, options: { timeout : { min: 100, max: 2000 }, apply: { filterClass: null, blinkClass: 'glow-on', color: blinkColor, duration: blinkRate } } };
 
 	const updateTrails = (event : MouseEvent) => {
-		const { clientX : x, clientY : y } = event;
-		trails.update((old : Position[]) : Position[] => [ ...old, { id: trailMaxId++, x, y } ].slice(-maxTrails));
+		const { x, y } = $MousePosition;
+		trails = [ ...trails, { id: trailMaxId++, x, y } ].slice(-maxTrails);
 	};
     const cursorUpdate = {
-		on: (_ : MouseEvent) => {
+		on: (event : MouseEvent) => {
+			event.preventDefault();
 			cursor.classList.add('click');
 
 			const ripple = {
 				id: Date.now(),
-				x: $mousePosition.x,
-				y: $mousePosition.y,
+				x: $MousePosition.x,
+				y: $MousePosition.y,
 			};
 
 			ripples = [...ripples, ripple];
@@ -44,7 +41,7 @@
 
 	const animationUpdate = () => {
 		// path.setAttribute('d', `M${startX} ${startY} L${mouseX} ${mouseY}`);
-		cursor.setAttribute('style', `top: ${ $mousePosition.y - cursorSize/2 }px; left: ${ $mousePosition.x - cursorSize/2 }px;`);
+		cursor.setAttribute('style', `top: ${ $MousePosition.y - cursorSize/2 }px; left: ${ $MousePosition.x - cursorSize/2 }px;`);
 		requestAnimationFrame(animationUpdate);
 	};
 
@@ -62,19 +59,7 @@
 	});
 </script>
 <style lang="scss">
-	@import './../../assets/styles/variables.scss';
-
-	@keyframes swim {
-		0% {
-			stroke-dasharray: 20 10 2;
-			stroke-dashoffset: 64;
-		}
-		100% {
-			stroke-dasharray: 20 10 2;
-			stroke-dashoffset: 0;
-		}
-	}
-	#_root {
+	#root {
 		position: fixed;
         pointer-events: none;
         width: 100vw;
@@ -91,6 +76,11 @@
                     transform: scale(.5);
                 }
             }
+			.pointer {
+				&.glow-on {
+					filter: drop-shadow(0 0 4px #fffa) drop-shadow(0 0 1px #0ffa) drop-shadow(0 0 0.5px #0ffa);
+				}
+			}
         }
 		.swimmer {
 			animation: swim 0.5s linear infinite;
@@ -116,18 +106,27 @@
 			}
 		}
 	}
-
 	.ripple {
 		position: absolute;
 		width: 2rem;
 		height: 2rem;
-		border: 1px solid $primary-color;
-		background: radial-gradient($primary-color, transparent);
+		border: 1px solid var(--primary-color);
+		background: var(--primary-radial);
 		border-radius: 100%;
 		scale: 1;
 		opacity: 0.9;
 		translate: -1rem -1rem;
 		animation: ripple-effect 0.5s ease-out forwards;
+	}
+	@keyframes swim {
+		0% {
+			stroke-dasharray: 20 10 2;
+			stroke-dashoffset: 64;
+		}
+		100% {
+			stroke-dasharray: 20 10 2;
+			stroke-dashoffset: 0;
+		}
 	}
 	@keyframes ripple-effect {
         to {
@@ -136,12 +135,12 @@
 		}
 	}
 </style>
-<div id="_root" class="container">
-    {#each $trails as { id, x, y } (id)}
-        <div class="trail filter-glow" style="left: calc({x}px - 0.25rem); top: calc({y}px - 0.25rem);"></div>
+<div id="root" class="container">
+    {#each trails as { id, x, y } (id)}
+        <div class="trail filter-glow glow-on" style="left: calc({x}px - 0.25rem); top: calc({y}px - 0.25rem);"></div>
     {/each}
     <svg bind:this={cursor} class="cursor click" viewBox="0 0 {cursorSize/2} {cursorSize/2}" width={cursorSize} height={cursorSize}>
-        <g transform="translate({cursorSize/4}, {cursorSize/4})" use:useEffect={blinkOptions}>
+        <g class="pointer glow-on" transform="translate({cursorSize/4}, {cursorSize/4})" use:useEffect={blinkOptions}>
             <circle cx="0" cy="0" r="5" stroke="white" stroke-width="1" fill="none"/>
             <circle cx="0" cy="0" r="1" fill="white"/>
         </g>

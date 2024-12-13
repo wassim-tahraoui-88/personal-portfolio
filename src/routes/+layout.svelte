@@ -1,13 +1,22 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { mouseTrack } from '$lib/store.js';
+	import '$assets/styles/app.scss';
+	import { onMount } from 'svelte';
+    import { trackMouse } from '$lib/stores/mouseStore';
+	import Cursor from '$lib/components/atoms/Cursor.svelte';
 
     let { children } = $props();
 
     onMount(() => {
-        document.addEventListener('mousemove', mouseTrack);
-	    return () => document.removeEventListener('mousemove', mouseTrack);
+        window.addEventListener('mousemove', trackMouse);
+	    return () => window.removeEventListener('mousemove', trackMouse);
     });
 </script>
-
-{@render children()}
+<style>
+    #root {
+        background-color: var(--background-color);
+    }
+</style>
+<div id="root" class="container h-100 w-100 row">
+    <div class="contents">{@render children()}</div>
+    <Cursor/>
+</div>
