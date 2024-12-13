@@ -1,12 +1,14 @@
 <script lang="ts">
     import { slide } from 'svelte/transition';
-    import { useLongPress } from '$lib/actions/MouseEvents';
+    import { type MouseEventCallback, useLongPress } from '$lib/actions/MouseEvents';
     import CircularGraphics from '$lib/components/atoms/CircularGraphics.svelte';
 
-    let { pressDuration = 500, onClick = () => {} } = $props();
+    let { onClick, pressDuration = 500 } : {
+        onClick : MouseEventCallback,
+        pressDuration : number
+    } = $props();
 
     const longPressOptions = { callback: onClick, data: { duration: pressDuration } };
-
 </script>
 <style lang="scss">
 	@keyframes swim {
