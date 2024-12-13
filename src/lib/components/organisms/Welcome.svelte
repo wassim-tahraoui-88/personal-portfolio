@@ -11,10 +11,10 @@
 </style>
 <div id="_root" class="container flex row h-100">
     <div class="container flex h-100 column">
-        <GraphicButton onClick/>
+        <GraphicButton onClick={(_) => {}}/>
         {#if visible}
             <TypewriterLabel text="Join My World"/>
         {/if}
-        <LabelButton onClick={(event) => {}}>Join My World</LabelButton>
+        <LabelButton onClick={(_) => {}}>Join My World</LabelButton>
     </div>
 </div>

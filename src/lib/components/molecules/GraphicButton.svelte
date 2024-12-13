@@ -5,7 +5,7 @@
 
     let { onClick, pressDuration = 500 } : {
         onClick : MouseEventCallback,
-        pressDuration : number
+        pressDuration? : number
     } = $props();
 
     const longPressOptions = { callback: onClick, data: { duration: pressDuration } };
