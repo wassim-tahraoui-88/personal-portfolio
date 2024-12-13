@@ -11,7 +11,7 @@
 </style>
 <div id="_root" class="container flex row h-100">
     <div class="container flex h-100 column">
-        <GraphicButton/>
+        <GraphicButton onClick/>
         {#if visible}
             <TypewriterLabel text="Join My World"/>
         {/if}
